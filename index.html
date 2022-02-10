@@ -1,0 +1,31 @@
+<html>
+    <body>
+          <h1>Todo</h1>
+
+              <form id="sign">
+                      <input id="alias" placeholder="username">
+                            <input id="pass" type="password" placeholder="passphrase">
+                                  <input id="in" type="submit" value="sign in">
+                                        <input id="up" type="button" value="sign up">
+                                            </form>
+
+                                                <ul></ul>
+
+                                                    <form id="said">
+                                                              <input id="say">
+                                                                      <input id="speak" type="submit" value="speak">
+</form>
+<script src="https://cdn.jsdelivr.net/npm/gun/examples/jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
+<!-- script src="https://cdn.jsdelivr.net/npm/gun/lib/webrtc.js"></script -->
+<script>          
+  var gun = Gun({
+  //peers:['http://localhost:8765/gun']
+  file: 'file/path.json'
+});
+  console.log(gun.get('list'));
+  /* Add code here... */
+</script>
+</body>
+</html>
