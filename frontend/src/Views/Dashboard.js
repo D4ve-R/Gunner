@@ -17,18 +17,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
 import Gun from 'gun';
 
 import gun from '../Connection/P2P';
-import { UserContext } from '../Connection/UserContext';
 import { MainListItems } from './Components/Listitems';
 import Copyright from './Components/Copyright';
 import CardGrid from './Components/CardGrid';
-import Blob from './Components/Blob';
 import ItemList from './Components/ItemList';
+import Input from './Components/Input';
 
 const drawerWidth = 240;
 
@@ -105,7 +102,7 @@ function DashboardContent() {
 
   	React.useEffect(() => {
 		fetchData().then(data => {
-			setTimeout(()=>{setItems(data);}, 750);
+			setTimeout(()=>{setItems(data)}, 750);
 			
 		});
 		  /*
@@ -148,7 +145,7 @@ function DashboardContent() {
 		const msg = user.get('all').set({what: secret});
 		const idx = new Date().toISOString();
 		gun.get('testdave').get(idx).put(msg);
-		console.log(items);
+		console.log(items[0]);
 	}
 
   	function handleAdd(){
@@ -164,56 +161,49 @@ function DashboardContent() {
       		<Box sx={{ display: 'flex' }}>
         		<CssBaseline />
         		<AppBar position="absolute" open={open}>
-          		<Toolbar sx={{ pr: '24px', /* keep right padding when drawer closed */}}>
-            		<IconButton
-              			edge="start" color="inherit"
-              			aria-label="open drawer" onClick={toggleDrawer}
-              			sx={{
-                			marginRight: '36px',
-                			...(open && { display: 'none' }),
-              			}}
-            		>
-              			<MenuIcon />
-            		</IconButton>
-            		<Typography
-              			component="h1" variant="h6"
-              			color="inherit" noWrap
-              			sx={{ flexGrow: 1 }}
-            		>
-              			Dashboard
-            		</Typography>
-					<IconButton color="inherit" onClick={handleAdd}>
-			  			<AddCircleOutlineIcon/>
-					</IconButton>
-            		<IconButton color="inherit">
-              			<Badge badgeContent={4} color="secondary">
-                			<NotificationsIcon />
-              			</Badge>
-            		</IconButton>
-          		</Toolbar>
+          			<Toolbar sx={{ pr: '24px', /* keep right padding when drawer closed */}}>
+            			<IconButton
+              				edge="start" color="inherit"
+              				aria-label="open drawer" onClick={toggleDrawer}
+              				sx={{
+                				marginRight: '36px',
+                				...(open && { display: 'none' }),
+              				}}
+            			>
+              				<MenuIcon />
+            			</IconButton>
+            			<Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+              				Dashboard
+            			</Typography>
+						<IconButton color="inherit" onClick={handleAdd}>
+			  				<AddCircleOutlineIcon/>
+						</IconButton>
+            			<IconButton color="inherit">
+              				<Badge badgeContent={4} color="secondary">
+                				<NotificationsIcon />
+              				</Badge>
+            			</IconButton>
+          			</Toolbar>
         		</AppBar>
         		<Drawer variant="permanent" open={open}>
-          		<Toolbar
-            		sx={{
+          			<Toolbar
+            			sx={{
               			display: 'flex',
               			alignItems: 'center',
               			justifyContent: 'flex-end',
               			px: [1],
-            		}}
-          		>
-            		<IconButton onClick={toggleDrawer}>
-              			<ChevronLeftIcon />
-            		</IconButton>
-          		</Toolbar>
-          		<Divider />
-          		<List component="nav">
-            		<MainListItems/>
-          		</List>
+            			}}
+          			>
+            			<IconButton onClick={toggleDrawer}>
+              				<ChevronLeftIcon />
+            			</IconButton>
+          			</Toolbar>
+          			<Divider />
+          			<List component="nav">
+            			<MainListItems/>
+          			</List>
         		</Drawer>
-        		<Box
-        	  		component="main"
-        	  		sx={{
-        	    	backgroundColor: (theme) =>
+        		<Box component="main" sx={{ backgroundColor: (theme) =>
         	      		theme.palette.mode === 'light'
         	        	? theme.palette.grey[100]
         	        	: theme.palette.grey[900],
@@ -222,62 +212,34 @@ function DashboardContent() {
         	    	overflow: 'auto',
         	  		}}
         		>
-        	  		
         	  		<Container maxWidth="lg" sx={{ mt: 12, mb: 4 }}>
-		  		<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 6, mb: 1 }}>
-		  			<Paper
-                  		sx={{
-                    		p: 2,
-							maxWidth: "sm",
-                    		display: 'flex',
-                    		flexDirection: 'column',
-                    		height: 200,
-                  		}}
-                	>
-              			<TextField
-                			margin="normal"	required
-                			fullWidth id="msg"
-                			label="In" name="msg"
-							autoFocus
-              			/>
-			  			<Button
-                			type="submit" fullWidth
-                			variant="contained" sx={{ mt: 3, mb: 2 }}
-            			>
-                			Submit
-              			</Button>
-						  
-			  		</Paper>
-					  <Paper>
-						  <h3>Storage</h3>
-						  <ItemList items={items}/>
-						</Paper>
-				</Box>
-            	<Grid container spacing={3}>
-              		<Grid item xs={12} md={4} lg={3}>
-                		<Paper
-                  			sx={{
-                    			p: 2,
-                    			display: 'flex',
-                    			flexDirection: 'column',
-                    			height: 240,
-                  			}}
-                		>
-							paper
-                		</Paper>
-              		</Grid>
-              		<Grid item xs={12} md={2}>
-                		<Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-							  le
-                		</Paper>
-              		</Grid>
-            	</Grid>
-            	<Copyright sx={{ pt: 4 }} />
+		  				<Input handler={handleSubmit}/>
+						<ItemList items={items}/>
+            			<Grid container spacing={3}>
+              				<Grid item xs={12} md={4} lg={3}>
+                				<Paper
+                	  				sx={{
+                	    			p: 2,
+                	    			display: 'flex',
+                	    			flexDirection: 'column',
+                	    			height: 240,
+                	  			}}
+                				>
+									paper
+                				</Paper>
+              				</Grid>
+              				<Grid item xs={12} md={2}>
+                				<Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+									le
+                				</Paper>
+              				</Grid>
+            			</Grid>
+            			<Copyright sx={{ pt: 4 }} />
         	  		</Container>
         		</Box>
       		</Box>
     	</ThemeProvider>
-  );
+	);
 }
 
 export default function Dashboard() {
