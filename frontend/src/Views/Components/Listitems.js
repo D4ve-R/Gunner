@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import gun from '../../Connection/P2P';
 
 function handleLogout(){
-	gun.user.leave();
+	gun.user().leave();
 }
 
 export const MainListItems = () => {
@@ -28,7 +28,7 @@ export const MainListItems = () => {
       <ListItemText primary="Home" />
     </ListItemButton>
 
-    <ListItemButton>
+    <ListItemButton onClick={() => { console.log(gun.user())}}>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>

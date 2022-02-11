@@ -12,23 +12,47 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 import gun from '../Connection/P2P';
 
 const theme = createTheme();
 
-
 export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
+	const navigate = useNavigate();
+	const user = gun.user();
 
-	var user = gun.user();
-	user.create(data.get('alias'), data.get('password'), (ack) => {
-		console.log(ack);
-	});
-  };
+  	const handleSubmit = (event) => {
+    	event.preventDefault();
+    	const form = new FormData(event.currentTarget);
+		// validate username uniqueness
+		gun.get('~' + form.get('alias')).once((data, key) => {
+			if(data){
+				Swal.fire({
+					title: 'Error!',
+					text: data,
+					icon: 'error',
+					confirmButtonText: 'Ok'
+				});
+				return;
+			}
+
+			user.create(form.get('alias'), form.get('password'), (ack) => {
+				if(!ack.err){
+					navigate('/dashboard');
+				}
+				else{
+					Swal.fire({
+						title: 'Error!',
+						text: ack.err,
+						icon: 'error',
+						confirmButtonText: 'Ok'
+					});
+				}
+			});	
+		});
+  	};
 
   return (
     <ThemeProvider theme={theme}>

@@ -1,5 +1,6 @@
 import Gun from 'gun';
-require('gun/sea');
+import 'gun/sea';
+//import 'gun/axe';
 
 const gun = Gun({
 	peers: ['http://localhost:8765/gun']

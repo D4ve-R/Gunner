@@ -6,17 +6,11 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
-
-import gun from '../../Connection/P2P';
+import {UserContext} from '../../Connection/UserContext';
 
 export default function Bar(props) {
 	const navigate = useNavigate();
-
-	function handleLogout(){
-		gun.user.leave();
-		navigate('/');
-		return;
-	}
+	const user = React.useContext(UserContext);
 
   return (
     <>
@@ -32,9 +26,9 @@ export default function Bar(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            { props.user != '' ? 'Hi, ' + props.user : 'Dings'}
+            { user.alias != '' ? 'Hi, ' + user.alias : 'Dings'}
           </Typography>
-          { props.user != '' ? 
+          { user.alias != '' ? 
 		  	(<Button color="inherit" onClick={()=>{navigate('/dashboard')}}>Dashboard</Button>) 
 		  	: (<Button color="inherit" onClick={()=>{navigate('/signin')}}>Login</Button>)
 		  }

@@ -13,32 +13,37 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 import gun from '../Connection/P2P';
-import { UserContext } from '../Connection/User';
 
 const theme = createTheme();
 
 
 export default function SignIn() {
-	const me = React.useContext(UserContext);
 	const navigate = useNavigate();
 	const [remember, setRemember] = React.useState(true);
 
 	const handleSubmit = (event) => {
     	event.preventDefault();
     	const data = new FormData(event.currentTarget);
-		var user = gun.user();
+		const user = gun.user();
 		if(remember){
 			user.recall({sessionStorage: true});
 		}
 		user.auth(data.get('alias'), data.get('password'), (ack) => {
 			if(!ack.err) {
-				me.alias = ack.put.alias;
-				navigate('/dashboard' + ack.put.alias);
+				navigate('/dashboard');
+			}
+			else{
+				Swal.fire({
+					title: 'Error!',
+					text: ack.err,
+					icon: 'error',
+					confirmButtonText: 'Ok'
+				});
 			}
 		});
-
   	};
 
   	return (
@@ -51,7 +56,7 @@ export default function SignIn() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
+            backgroundImage: 'url(https://unsplash.com/photos/Q1p7bh3SHj8)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -69,7 +74,7 @@ export default function SignIn() {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: '#009688' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
