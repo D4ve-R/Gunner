@@ -17,15 +17,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import Swal from 'sweetalert2';
-import Gun from 'gun';
 
-import gun from '../Connection/P2P';
+import {useGun} from '../hooks/useGun';
 import { MainListItems } from './Components/Listitems';
 import Copyright from './Components/Copyright';
-import CardGrid from './Components/CardGrid';
-import ItemList from './Components/ItemList';
-import Input from './Components/Input';
+import GunChat from './Components/GunChat';
 
 const drawerWidth = 240;
 
@@ -75,86 +71,13 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-const SEA = Gun.SEA;
-const user = gun.user();
-async function fetchData(){
-	var blobs = [];
-	gun.get('testdave').map().once(async (data,key)=>{
-		if(data && data.what){
-			var msg = {
-				who: gun.get(data).get('alias'),
-				what: (await SEA.decrypt(data.what, 'key'))+'',
-				when: Gun.state.is(data, 'what')
-			}
-			if(msg.what)
-				blobs.push(msg);
-		}
-	});
-	return blobs;
-}
-
 function DashboardContent() {
+	const gun = useGun();
+	const user = gun.user();
   	const [open, setOpen] = React.useState(true);
   	const toggleDrawer = () => {
     	setOpen(!open);
   	};
-	const [items, setItems] = React.useState([]);
-
-  	React.useEffect(() => {
-		fetchData().then(data => {
-			setTimeout(()=>{setItems(data)}, 750);
-			
-		});
-		  /*
-	  	let messages=[];
-		gun.get('testdave').map().on(async (data, key) => {
-		  	if(data && data.what){
-			  	var msg = {
-				  	who: gun.get(data).get('alias'),
-				  	what: (await SEA.decrypt(data.what, 'key'))+'',
-				  	when: Gun.state.is(data, 'what')
-			  	}
-			  	if(msg.what){
-					// [messages] = [...items, msg];
-					return;
-			  	}
-		  	}
-	  	}, true);*/
-	  	//const [tmp] = [...items, messages];
-	  	//setItems(messages);
-	  	//console.log(messages);
-
-	  	return () => {
-		  	gun.get('testdave').map().off();
-	  	}
-  	},[]);
-
-  	async function handleSubmit(event){
-		event.preventDefault();
-		if(!user.is){
-			Swal.fire({
-				title: 'Error!',
-				text: 'Login!',
-				icon: 'error',
-				confirmButtonText: 'Ok'
-			});
-			return; 
-		}
-		const data = new FormData(event.currentTarget);
-		const secret = await SEA.encrypt(data.get('msg'), 'key');
-		const msg = user.get('all').set({what: secret});
-		const idx = new Date().toISOString();
-		gun.get('testdave').get(idx).put(msg);
-		console.log(items[0]);
-	}
-
-  	function handleAdd(){
-
-  	}
-
-	 // {items.map((item) => <Blob msg={item.what} key={item.when}/>)}
-
-  // console.log(gun.user(user.pub));
 
   	return (
     	<ThemeProvider theme={mdTheme}>
@@ -175,7 +98,7 @@ function DashboardContent() {
             			<Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
               				Dashboard
             			</Typography>
-						<IconButton color="inherit" onClick={handleAdd}>
+						<IconButton color="inherit" onClick={(e)=>{}}>
 			  				<AddCircleOutlineIcon/>
 						</IconButton>
             			<IconButton color="inherit">
@@ -213,8 +136,9 @@ function DashboardContent() {
         	  		}}
         		>
         	  		<Container maxWidth="lg" sx={{ mt: 12, mb: 4 }}>
-		  				<Input handler={handleSubmit}/>
-						<ItemList items={items}/>
+		  				<Paper sx={{mt: 4, mb: 4}}>
+							  {!!user.is ? <GunChat user={user}/> : <h2>Chat</h2>}
+						  </Paper>
             			<Grid container spacing={3}>
               				<Grid item xs={12} md={4} lg={3}>
                 				<Paper

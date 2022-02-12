@@ -14,20 +14,20 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-
-import gun from '../Connection/P2P';
+import {useGun} from '../hooks/useGun';
 
 const theme = createTheme();
 
 
 export default function SignIn() {
+  const gun = useGun();
+  const user = gun.user();
 	const navigate = useNavigate();
 	const [remember, setRemember] = React.useState(true);
 
 	const handleSubmit = (event) => {
     	event.preventDefault();
     	const data = new FormData(event.currentTarget);
-		const user = gun.user();
 		if(remember){
 			user.recall({sessionStorage: true});
 		}

@@ -6,10 +6,12 @@ import SignUp from './Views/SignUp';
 import Dashboard from './Views/Dashboard';
 import Layout from './Views/Components/Layout';
 import Test from './Views/Test';
+import { GunContext, gun } from './hooks/useGun';
 import './App.css';
 
 function App() {
   return (
+	<GunContext.Provider value={gun}>
 	<Routes>
 	  <Route path="/dashboard" element={<Layout children={<Dashboard/>} />}/>
       <Route path="/signin" element={<Layout children={<SignIn/>} />} />
@@ -20,6 +22,7 @@ function App() {
 	  </Route>
 	  <Route path="*" element={<Navigate to="/"/>}/>
 	</Routes>
+	</GunContext.Provider>
   );
 }
 

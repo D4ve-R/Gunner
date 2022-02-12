@@ -9,7 +9,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Bar from './Components/Bar';
 import Copyright from './Components/Copyright';
 import CardGrid from './Components/CardGrid';
-import {UserContext} from '../Connection/UserContext';
 
 const theme = createTheme();
 

@@ -14,45 +14,44 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-
-import gun from '../Connection/P2P';
+import { useGun } from '../hooks/useGun';
 
 const theme = createTheme();
 
 export default function SignUp() {
-	const navigate = useNavigate();
+  const gun = useGun();
 	const user = gun.user();
+  const navigate = useNavigate();
 
-  	const handleSubmit = (event) => {
-    	event.preventDefault();
-    	const form = new FormData(event.currentTarget);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
 		// validate username uniqueness
 		gun.get('~' + form.get('alias')).once((data, key) => {
-			if(data){
-				Swal.fire({
-					title: 'Error!',
-					text: data,
-					icon: 'error',
-					confirmButtonText: 'Ok'
-				});
-				return;
-			}
-
-			user.create(form.get('alias'), form.get('password'), (ack) => {
-				if(!ack.err){
-					navigate('/dashboard');
-				}
-				else{
-					Swal.fire({
-						title: 'Error!',
-						text: ack.err,
-						icon: 'error',
-						confirmButtonText: 'Ok'
-					});
-				}
-			});	
-		});
-  	};
+		  if(data){
+			  Swal.fire({
+				  title: 'Error!',
+				  text: data,
+				  icon: 'error',
+				  confirmButtonText: 'Ok'
+			  });
+			  return;
+		  }
+		  user.create(form.get('alias'), form.get('password'), (ack) => {
+			  if(!ack.err){
+				  navigate('/dashboard');
+			  }
+			  else{
+				  Swal.fire({
+					  title: 'Error!',
+					  text: ack.err,
+					  icon: 'error',
+					  confirmButtonText: 'Ok'
+				  });
+			  }
+		  });	
+	  });
+  };
 
   return (
     <ThemeProvider theme={theme}>
