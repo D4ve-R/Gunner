@@ -1,21 +1,17 @@
-import { useState, useReducer, useEffect } from 'react';
+import { useState, useReducer, useEffect, useRef } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
+import SendIcon from '@mui/icons-material/Send';
 import Gun from 'gun';
 import { useGun } from '../../hooks/useGun';
 import {MessageRight, MessageLeft} from './Blob';
 
 const SEA = Gun.SEA;
 const node = 'msg3';
-
-function reducer(state, message) {
-  return {
-    messages: [message, ...state.messages]
-  }
-}
 
 function formatDate(date){
     let d = new Date(date)
@@ -26,17 +22,15 @@ function formatDate(date){
       +":"+((d.getSeconds() < 10) ? '0'+d.getSeconds() : d.getSeconds()));
 }
 
-/*
-      <div key={message.key}>
-        <h2>{message.message}</h2>
-        <h3>From: {message.name}</h3>
-        <p>{formatDate(message.createdAt)}</p>
-      </div>
-      */
-
 const List = ({username}) => {
-  const gun = useGun();
-  const [state, dispatch] = useReducer(reducer, { messages: [] });
+  const gun = useGun(); 
+  const scrollRef = useRef(null);
+  const [state, dispatch] = useReducer((state, message) => {
+    return {
+      messages: [...state.messages, message]
+    }
+  }, { messages: [] });
+
   useEffect(() => {
     gun.get(node).map().once(async (m, key)=> {
       let text = await SEA.decrypt(m.message, 'key');
@@ -48,19 +42,24 @@ const List = ({username}) => {
       }
       //if(!state.messages.find(el => (msg.key === el.key))) {
           dispatch(msg);
-          console.log(msg);
         //}
     });
   },[]);
 
-  const list = state.messages.map((message) => 
-    ((message.name !== username) ? 
-      ( <MessageLeft id={message.key} message={message.message} timestamp={formatDate(message.createdAt)} displayName={username}/>)
-      :(<MessageRight id={message.key} message={message.message} timestamp={formatDate(message.createdAt)}/>))
+  useEffect(()=>{
+    if (scrollRef.current) {
+      scrollRef.current.scroll({ behaviour: "smooth", top: scrollRef.current.scrollHeight });
+    }
+  },[state.messages])
+
+  const list = state.messages.map((msg) => 
+    ((msg.name !== username) ? 
+      ( <MessageLeft id={msg.key} message={msg.message} timestamp={formatDate(msg.createdAt)} displayName={msg.name}/>)
+      :(<MessageRight id={msg.key} message={msg.message} timestamp={formatDate(msg.createdAt)} displayName={msg.name}/>))
   );
 
   return (
-    <Paper sx={{maxHeight: 300, overflow: 'auto', bgcolor: '#7d6d6b'}}>
+    <Paper  ref={scrollRef} sx={{maxHeight: 600, overflow: 'auto', bgcolor: '#404040', p: 2}}>
       {list}
     </Paper>
   );
@@ -85,7 +84,8 @@ const Input = ({username}) => {
   }
 
   return (
-    <Box component="form" noValidate onSubmit={saveMessage} sx={{ m: 1, flex: 1}}>
+    <Box component="form" noValidate onSubmit={saveMessage} sx={{ m: 1, display: 'flex'}}>
+      
         <TextField
             value={text}
             name="message"
@@ -95,19 +95,21 @@ const Input = ({username}) => {
             onChange={handleChange}
 			      autoFocus
         />
-        <Button type="submit" variant="contained" sx={{ mt: 1, mb: 2 }}>
-          Send as {username}
-        </Button>
+       
+        <IconButton color="inherit" type="submit" sx={{borderRadius: "5px", backgroundColor: "#75bed9", height: "56px", top: "16px", ml: 1}}>
+          <SendIcon />
+        </IconButton>
+     
     </Box>
   );
 }
 
 export default function GunChat({user}) {
-
+  const username = user.is.alias;
   return (
     <>
-      <List/>
-      <Input username={user.is.alias}/>
+      <List username={username}/>
+      <Input username={username}/>
     </>
   );
 }

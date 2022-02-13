@@ -133,7 +133,7 @@ function DashboardContent({user}) {
         	  		}}
         		>
         	  		<Container maxWidth="lg" sx={{ mt: 12, mb: 4 }}>
-		  				<Paper sx={{mt: 4, mb: 4}}>
+		  				<Paper sx={{mt: 4, mb: 4, p:2}}>
 							{!!user.is ? <GunChat user={user}/> : <h2>Chat</h2>}
 						</Paper>
             			<Copyright sx={{ pt: 4 }} />

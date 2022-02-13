@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     messageRow: {
       display: "flex",
+      //justifyContent: 'flex-start',
     },
     messageRowRight: {
       display: "flex",
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) =>
       padding: "10px",
       backgroundColor: "#A8DDFD",
       width: "60%",
+      minWidth: "150px",
       //height: "50px",
       textAlign: "left",
       font: "400 .9em 'Open Sans', sans-serif",
@@ -122,24 +124,22 @@ export const MessageLeft = (props) => {
   const photoURL = "https://avatars.dicebear.com/api/bottts/" + displayName + ".svg";
   const classes = useStyles();
   return (
-    <React.Fragment key={id}>
-      <div className={classes.messageRow}>
-        <Avatar
-          alt={displayName}
-          className={classes.orange}
-          src={photoURL}
-        ></Avatar>
-        <div>
-          <div className={classes.displayName}>{displayName}</div>
-          <div className={classes.messageBlue}>
-            <div>
-              <p className={classes.messageContent}>{message}</p>
-            </div>
-            <div className={classes.messageTimeStampRight}>{timestamp}</div>
+    <div className={classes.messageRow} key={id}>
+      <Avatar
+        alt={displayName}
+        className={classes.orange}
+        src={photoURL}
+      ></Avatar>
+      <div>
+        <div className={classes.displayName}>{displayName}</div>
+        <div className={classes.messageBlue}>
+          <div>
+            <p className={classes.messageContent}>{message}</p>
           </div>
+          <div className={classes.messageTimeStampRight}>{timestamp}</div>
         </div>
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 
@@ -160,6 +160,7 @@ export const MessageRight = (props) => {
           alt={displayName}
           className={classes.orange}
           src={photoURL}
+          sx={{top: "-25px"}}
         ></Avatar>
     </div>
   );
