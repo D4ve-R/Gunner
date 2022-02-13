@@ -1,4 +1,4 @@
-import { useEffect, useState, useReducer, useContext } from 'react';
+import { useState, useReducer } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -6,12 +6,7 @@ import Gun from 'gun';
 import { useGun } from '../../hooks/useGun';
 
 const SEA = Gun.SEA;
-
-const db = 'msg';
-
-const initialState = {
-  messages: []
-}
+const node = 'msg3';
 
 function reducer(state, message) {
   return {
@@ -21,78 +16,100 @@ function reducer(state, message) {
 
 function formatDate(date){
     let d = new Date(date)
-    return (d.getDate()+"."+d.getMonth()+"."+d.getFullYear()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds());
+    return (
+      d.getDate()+"."+d.getMonth()+"."+d.getFullYear()+" "
+      +((d.getHours() < 10) ? '0'+d.getHours() : d.getHours())
+      +":"+((d.getMinutes() < 10) ? '0'+d.getMinutes() : d.getMinutes())
+      +":"+((d.getSeconds() < 10) ? '0'+d.getSeconds() : d.getSeconds()));
 }
 
-export default function GunChat({user}) {
-    const gun = useGun();
-    const [formState, setForm] = useState({
-    name: '', message: ''
-  })
+const List = ({messages}) => {
+  const gun = useGun();
+  const [state, dispatch] = useReducer(reducer, { messages: messages });
+  gun.get(node).map().on(async (m, key)=> {
+    let text = await SEA.decrypt(m.message, 'key');
+    let msg = {
+      name: m.name,
+      message: text,
+      createdAt: m.createdAt,
+      key: key
+    }
+    if(!state.messages.find(el => (msg.key === el.key))) {
+      dispatch(msg);
+    }
+  }, true);
+  return (
+    <>
+    Messages:
+    { state.messages.map(message => (
+      <div key={message.key}>
+        <h2>{message.message}</h2>
+        <h3>From: {message.name}</h3>
+        <p>{message.key}</p>
+        <p>{formatDate(message.createdAt)}</p>
+      </div>))
+    }
+  </>
+  );
+}
 
-  // initialize the reducer & state for holding the messages array
-  const [state, dispatch] = useReducer(reducer, initialState)
-
-  // when the app loads, fetch the current messages and load them into the state
-  // this also subscribes to new data as it changes and updates the local state
-  useEffect(() => {
-    user.get('alias').once(name => setForm({...formState, name: name}));
-    const messages = gun.get(db)
-    messages.map().on(async (m)=> {
-        let msg = (await SEA.decrypt(m.message, 'key'))+'';
-      dispatch({
-        name: m.name,
-        message: msg,
-        createdAt: m.createdAt
-      })
-    })
-  }, [])
-
-  // set a new message in gun, update the local state to reset the form field
+const Input = ({username}) => {
+  const gun = useGun();
+  const [text, setText] = useState('');
   async function saveMessage(e) {
-      e.preventDefault();
-      let msg = await SEA.encrypt(formState.message, 'key');
-      const messages = gun.get(db)
-      messages.set({
-        name: formState.name,
-        message: msg,
-        createdAt: Date.now()
-      })
-    setForm({
-      name: '', message: ''
-    })
+    e.preventDefault();
+    let msg = await SEA.encrypt(text, 'key');
+    const messages = gun.get(node);
+    messages.set({
+      name: username,
+      message: msg,
+      createdAt: Date.now()
+    });
+    setText('');
   }
 
-  // update the form state as the user types
-  function onChange(e) {
-    setForm({ ...formState, [e.target.name]: e.target.value  })
+  function handleChange(e){
+    setText(e.target.value)
   }
 
   return (
     <Box component="form" noValidate onSubmit={saveMessage} sx={{ m: 4}}>
         <TextField
-            name="message" value={formState.message}
+            value={text}
+            name="message"
             margin="normal"	required
             fullWidth id="msg"
             label="Nachricht"
-			autoFocus
-            onChange={onChange}
+            onChange={handleChange}
+			      autoFocus
         />
-        <Button type="submit" 
-            variant="contained" sx={{ mt: 3, mb: 2 }}
-        >
-            Submit
+        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+          Send as {username}
         </Button>
-      
-      {
-        state.messages.map(message => (
-          <div key={message.createdAt}>
-            <h2>{message.message}</h2>
-            <h3>From: {message.name}</h3>
-            <p>Date: {formatDate(message.createdAt)}</p>
-          </div>
-        ))
-      }
     </Box>
+  );
+}
+
+export default function GunChat({user}) {
+  const gun = useGun();
+  let pre = [];
+  gun.get(node).map().once(async (m, key)=> {
+    let text = await SEA.decrypt(m.message, 'key');
+    let msg = {
+      name: m.name,
+      message: text,
+      createdAt: m.createdAt,
+      key: key
+    }
+    if(!pre.find(el => (msg.key === el.key))) {
+      pre.push(msg);
+    }
+  });
+
+  return (
+    <>
+      <Input username={user.is.alias}/>
+      <List state={pre}/>
+    </>
   );
 }

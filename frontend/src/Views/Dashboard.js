@@ -71,9 +71,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
-	const gun = useGun();
-	const user = gun.user();
+function DashboardContent({user}) {
   	const [open, setOpen] = React.useState(true);
   	const toggleDrawer = () => {
     	setOpen(!open);
@@ -167,5 +165,7 @@ function DashboardContent() {
 }
 
 export default function Dashboard() {
-  return <DashboardContent />;
+	const gun = useGun();
+	const user = gun.user();
+  return <DashboardContent user={user} />;
 }
