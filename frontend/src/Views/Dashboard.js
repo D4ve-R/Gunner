@@ -11,7 +11,6 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -135,27 +134,8 @@ function DashboardContent({user}) {
         		>
         	  		<Container maxWidth="lg" sx={{ mt: 12, mb: 4 }}>
 		  				<Paper sx={{mt: 4, mb: 4}}>
-							  {!!user.is ? <GunChat user={user}/> : <h2>Chat</h2>}
-						  </Paper>
-            			<Grid container spacing={3}>
-              				<Grid item xs={12} md={4} lg={3}>
-                				<Paper
-                	  				sx={{
-                	    			p: 2,
-                	    			display: 'flex',
-                	    			flexDirection: 'column',
-                	    			height: 240,
-                	  			}}
-                				>
-									paper
-                				</Paper>
-              				</Grid>
-              				<Grid item xs={12} md={2}>
-                				<Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-									le
-                				</Paper>
-              				</Grid>
-            			</Grid>
+							{!!user.is ? <GunChat user={user}/> : <h2>Chat</h2>}
+						</Paper>
             			<Copyright sx={{ pt: 4 }} />
         	  		</Container>
         		</Box>

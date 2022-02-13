@@ -13,7 +13,6 @@ import CardGrid from './Components/CardGrid';
 const theme = createTheme();
 
 export default function Home() {
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

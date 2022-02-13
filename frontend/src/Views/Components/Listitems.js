@@ -11,14 +11,21 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import gun from '../../Connection/P2P';
-
-function handleLogout(){
-	gun.user().leave();
-}
+import {useGun} from '../../hooks/useGun';
 
 export const MainListItems = () => {
+  const gun = useGun();
 	const navigate = useNavigate();
+
+  function handleLogout(){
+    let user = gun.user();
+    if(user.is) {
+      user.leave();
+      navigate('/');
+    }
+    else console.log('Logout Failed');
+  }  
+
 	return (
   <React.Fragment>
 	<ListItemButton onClick={() => navigate('/')}>
@@ -57,7 +64,6 @@ export const MainListItems = () => {
     </ListItemButton>
 
 	<ListItemButton onClick={() => {
-		navigate('/');
 		handleLogout();
 		}}>
       <ListItemIcon>
