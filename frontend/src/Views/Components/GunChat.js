@@ -34,6 +34,7 @@ const List = ({username}) => {
   useEffect(() => {
     gun.get(node).map().once(async (m, key)=> {
       let text = await SEA.decrypt(m.message, 'key');
+      let name = gun.user()
       let msg = {
         name: m.name,
         message: text,
