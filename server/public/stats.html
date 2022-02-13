@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/stats/style.css">
 </head>
 <body>
 <style>
@@ -41,14 +41,14 @@
 </div>
 
 
-<script src="/static/js/jquery.js"></script>
-<script src="/static/js/smoothie.js" charset="utf-8"></script>
+<script src="/static/js/stats/jquery.js"></script>
+<script src="/static/js/stats/smoothie.js" charset="utf-8"></script>
 <script>
   var up, br = 0, bt = 0, tmp;
   var fetchData = async function(){
     // fetch the data from server
     var S = +new Date;
-    var data = await (await fetch(url.value||(location.origin+'/gun/stats.radata'), {method: 'GET',mode: 'cors'})).json();
+    var data = await (await fetch(url.value||(location.origin+'/gun/stats.data'), {method: 'GET',mode: 'cors'})).json();
     $('#block').text(((br += (+new Date - S)/1000) / ++bt).toFixed(1));
     data.over = (data.over/1000) || 15;
 		$('#stack').text((data.cpu||'').stack);
@@ -62,7 +62,7 @@
       Stats('peers#').line.append(+new Date, data.peers.count);
       return;
       Stats('cpu%');
-      tmp = await (await fetch(new Request(location.origin+'/gun/stats.top.radata'), {method: 'GET',mode: 'cors'})).text();
+      tmp = await (await fetch(new Request(location.origin+'/gun/stats.top.data'), {method: 'GET',mode: 'cors'})).text();
       tmp = parseFloat((tmp.split('\n').filter(l => l.indexOf('node')+1)[0]||'').split(/\s+/).slice(-4)[0]||'0');
       Stats('cpu%').line.append(+new Date, tmp);
     }catch(e){console.log(e)}}());
