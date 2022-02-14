@@ -9,6 +9,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Bar from './Components/Bar';
 import Copyright from './Components/Copyright';
 import CardGrid from './Components/CardGrid';
+import GunStream from './Components/GunChat/GunStream';
+import GunVideo from './Components/GunChat/GunVideo';
 
 const theme = createTheme();
 
@@ -26,6 +28,9 @@ export default function Home() {
             pb: 6,
           }}
         >
+
+          <GunVideo/>
+          <GunStream/>
           <Container maxWidth="sm">
             <Typography
               component="h1"

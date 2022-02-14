@@ -1,7 +1,5 @@
 import { useState, useReducer, useEffect, useRef } from 'react';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
@@ -34,7 +32,7 @@ const List = ({username}) => {
   useEffect(() => {
     gun.get(node).map().once(async (m, key)=> {
       let text = await SEA.decrypt(m.message, 'key');
-      let name = gun.user()
+      //let name = gun.user()
       let msg = {
         name: m.name,
         message: text,
