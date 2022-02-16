@@ -30,7 +30,6 @@ const GunRecorder = () => {
             recorderRef.current = recorder;
             s.srcObject = stream;
             s.play();
-            
         })
         .catch(e => console.log(e));
 // eslint-disable-next-line        
@@ -39,7 +38,7 @@ const GunRecorder = () => {
     return (
         <React.Fragment>
             <video ref={streamRef} id="stream">Streamer</video>
-            <button onClick={e => {e.preventDefault(); recorderRef.current.start(500)}}>Record</button>
+            <button onClick={e => {e.preventDefault(); recorderRef.current.start(5000)}}>Record</button>
             <button onClick={e => {e.preventDefault(); recorderRef.current.stop()}}>Stop</button>
         </React.Fragment>
     );

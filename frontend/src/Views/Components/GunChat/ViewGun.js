@@ -40,6 +40,7 @@ const ViewGun = ({data}) => {
         appendBuffer(data);
         if(vid.readyState >= 2 && vid.paused)
             vid.play();
+// eslint-disable-next-line
     }, [data]);
 
 

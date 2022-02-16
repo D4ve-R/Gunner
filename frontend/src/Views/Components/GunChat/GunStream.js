@@ -1,46 +1,36 @@
 import React, {useEffect, useRef} from "react";
 import { useGun } from '../../../hooks/useGun';
 
-const width = 300;
-const pushRate = 20000; // in ms
+const pushRate = 5000; // in ms
+const node = 'streaming';
 
 const GunStream = () => {
     const gun = useGun();
     const streamRef = useRef(null);
-    const streaming = useRef(false);
 
     useEffect(() => {
         const s = streamRef.current;
         navigator.mediaDevices.getUserMedia({video: true, audio: false})
         .then(stream => {
-            const recoder = new MediaRecorder(stream, {mimeType: 'video/webm'}); //mimeType + codecs ?
-            recoder.ondataavailable = (ev) => {
-                // streamdata available in ev.data
-                const data = ev.data;
+            const recorder = new MediaRecorder(stream, {mimeType: 'video/webm'}); //mimeType + codecs ?
+            recorder.ondataavailable = (ev) => {
                 let reader = new FileReader();
-                reader.readAsDataURL(data);
-                reader.onloadend = async() => {
-                    let b64 = reader.result;
-                    b64 = 'data:video/webm;base64,' + b64.split(',')[1];
-                    //console.log(b64)
+                reader.readAsDataURL(ev.data);
+                reader.onloadend = () => {
+                    let result = reader.result;
+                    //b64 = 'data:video/webm' + result.slice(result.indexOf(';'))
+                    let [codecs, b64] = result.split(',');
+                    //console.log("Client using Encoding=" + codecs);
                     // push to gun, encrypt here, making func async + await SEA.encrypt
-                    gun.get('test').get('video').put(b64);
-                    //gun.get('test').get('video').once(console.log);
+                    gun.get('test').get(node).put(b64);
                 }
             }
-            recoder.start(pushRate);
+            recorder.start(pushRate);
             s.srcObject = stream;
             s.play();
-            s.addEventListener('canplay', ev => {
-                if(!streaming){
-                    let height = s.videoHeight / (s.videoWidth/width);
-                    s.setAttribute('width', width);
-                    s.setAttribute('height', height);
-                    streaming.current = true;
-                }
-            }, false);
         })
         .catch(e => console.log(e));
+// eslint-disable-next-line        
     },[]);
 
     return (
