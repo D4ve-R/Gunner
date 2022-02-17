@@ -6,28 +6,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Bar from './Components/Bar';
-import Copyright from './Components/Copyright';
+import Bar from './Components/Layout/Bar';
+import Copyright from './Components/Layout/Copyright';
 import CardGrid from './Components/CardGrid';
-import GunStream from './Components/GunChat/GunStream';
-import GunVideo from './Components/GunChat/GunVideo';
-import GunPlayer from './Components/GunChat/GunPlayer';
-import GunRecorder from './Components/GunChat/GunRecorder';
-import FileUpload from './Components/FileUpload/FileUpload';
-import Gun3d from './Components/GunChat/Gun3d';
-
-const Viewer = () => {
-  const [url, setUrl] = React.useState('');
-  function handleFile(file){
-    setUrl(URL.createObjectURL(file));
-  }
-  return (
-    <>
-      <FileUpload onChange={handleFile}/>
-      <Gun3d url={url} width={'400px'} height={'200px'}/>
-    </>
-  );
-}
 
 const theme = createTheme();
 
@@ -36,7 +17,7 @@ export default function Home() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Bar username={''}/>
-      <main>
+      <main onDrag={e => {e.preventDefault()}} onDrop={e => {e.preventDefault()}}>
         {/* Hero unit */}
         <Box
           sx={{
@@ -45,7 +26,7 @@ export default function Home() {
             pb: 6,
           }}
         >
-          <Viewer/>
+          
           <Container maxWidth="sm">
             <Typography
               component="h1"

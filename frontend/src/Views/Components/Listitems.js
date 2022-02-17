@@ -9,6 +9,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import HomeIcon from '@mui/icons-material/Home';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import {useGun} from '../../hooks/useGun';
@@ -35,7 +36,7 @@ export const MainListItems = () => {
       <ListItemText primary="Home" />
     </ListItemButton>
 
-    <ListItemButton onClick={() => { console.log(gun.user())}}>
+    <ListItemButton onClick={() => navigate('/dashboard')}>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
@@ -49,11 +50,11 @@ export const MainListItems = () => {
       <ListItemText primary="Customers" />
     </ListItemButton>
 
-    <ListItemButton>
+    <ListItemButton onClick={() => navigate('/upload')}>
       <ListItemIcon>
-        <BarChartIcon />
+        <FileUploadIcon />
       </ListItemIcon>
-      <ListItemText primary="Reports" />
+      <ListItemText primary="Upload" />
     </ListItemButton>
 
     <ListItemButton>

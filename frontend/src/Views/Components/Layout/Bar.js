@@ -6,8 +6,11 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
+import {useGun} from '../../../hooks/useGun';
 
 export default function Bar(props) {
+  const gun = useGun();
+  const user = gun.user();
 	const navigate = useNavigate();
   return (
     <>
@@ -25,10 +28,9 @@ export default function Bar(props) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             { 'Dings'}
           </Typography>
-          
-		  	(<Button color="inherit" onClick={()=>{navigate('/dashboard')}}>Dashboard</Button>) 
-		  	 (<Button color="inherit" onClick={()=>{navigate('/signin')}}>Login</Button>)
-		  
+          {user.is ? (<Button color="inherit" onClick={()=>{navigate('/dashboard')}}>Dashboard</Button>)
+          :(<Button color="inherit" onClick={()=>{navigate('/signin')}}>Login</Button>)}
+		  	 
         </Toolbar>
       </AppBar>
     </>

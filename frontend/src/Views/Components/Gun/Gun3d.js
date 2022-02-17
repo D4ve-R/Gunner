@@ -1,20 +1,19 @@
-import React, {useRef, useEffect, Suspense } from 'react';
-import * as three from 'three';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber'
+import React, { Suspense, useRef } from 'react';
+import { Canvas, useLoader, useGraph, useFrame } from '@react-three/fiber'
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import { Box } from '@mui/material';
 import {OBJLoader} from '../../../hooks/OBJLoader';
 
-function animate(obj, scene, camera, renderer){
-  requestAnimationFrame(animate(obj, scene, camera, renderer));
-  obj.rotation.x += 0.01;
-  obj.rotation.y += 0.01;
-  renderer.render(scene, camera);
-}
-
 const Scene = ({url}) => {
+    const meshRef = useRef();
     const obj = useLoader(OBJLoader, url);
-    return <primitive object={obj}/>
+    const {nodes, materials} = useGraph(obj);
+    useFrame(({clock}) => {
+        meshRef.current.rotation.y = clock.getElapsedTime() / 4;
+    });
+    console.log(materials);
+    //return <primitive object={obj}/>
+     return <mesh ref={meshRef} geometry={nodes.boat.geometry} material={materials.silver}/>
 }
 
 const Gun3d = ({url, width, height}) => {
@@ -28,7 +27,7 @@ const Gun3d = ({url, width, height}) => {
     );
   }
   return (
-    <div style={{maxWidth: width, maxHeight: height}}>
+    <div style={{width: width, height: height}}>
       <Canvas>
           <Suspense fallback={null}>
             <Scene url={url}/>

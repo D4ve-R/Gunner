@@ -28,23 +28,21 @@ export default function SignIn() {
 	const handleSubmit = (event) => {
     	event.preventDefault();
     	const data = new FormData(event.currentTarget);
-		if(remember){
-			user.recall({sessionStorage: true});
-		}
-		user.auth(data.get('alias'), data.get('password'), (ack) => {
-			if(!ack.err) {
-				navigate('/dashboard');
-			}
-			else{
-				Swal.fire({
-					title: 'Error!',
-					text: ack.err,
-					icon: 'error',
-					confirmButtonText: 'Ok'
-				});
-			}
-		});
-  	};
+			user.recall({sessionStorage: remember});
+		  user.auth(data.get('alias'), data.get('password'), (ack) => {
+			  if(!ack.err) {
+				  navigate('/dashboard');
+			  }
+			  else{
+				  Swal.fire({
+					  title: 'Error!',
+					  text: ack.err,
+					  icon: 'error',
+					  confirmButtonText: 'Ok'
+				  });
+			  }
+		  });
+  };
 
   	return (
     <ThemeProvider theme={theme}>
@@ -102,10 +100,11 @@ export default function SignIn() {
               />
               <FormControlLabel
                 control={<Checkbox 
-					value="remember" 
-					color="primary"
-					onChange={(e)=>{setRemember(e.target.checked)}}
-					defaultChecked/>}
+					        value="remember" 
+					        color="primary"
+					        onChange={(e)=>{setRemember(e.target.checked)}}
+					        defaultChecked={remember}/>
+                }
                 label="Remember me"
               />
               <Button

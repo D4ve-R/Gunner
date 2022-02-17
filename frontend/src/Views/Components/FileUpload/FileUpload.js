@@ -9,8 +9,8 @@ function handleDefaults(event){
 }
 
 const FileUpload = ({onChange, onDrop, width = '400px', height = '200px', bgColor='#969696', labelText = 'Click or Drag&drop file here'}) => {
-    window.addEventListener('drop', handleDefaults);
-    window.addEventListener('dragover', handleDefaults);
+    //window.addEventListener('drop', handleDefaults);
+    //window.addEventListener('dragover', handleDefaults);
     const [label, setLabel] = useState(labelText);
     
     function handleDragEnter(e){
