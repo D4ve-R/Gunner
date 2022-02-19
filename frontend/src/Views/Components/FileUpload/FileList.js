@@ -40,7 +40,7 @@ const FileList = ({file, height=200}) => {
     return (
         <>
         <Box>
-            <Paper sx={{p:1, overflow: 'auto', maxHeight: height}}>
+            <Paper sx={{p:1, overflow: 'auto', maxHeight: height, height: '100vh'}}>
                 Files
                 {files.map((f, id) => (<ListItem key={id} id={id} item={f}/>))}
             </Paper>

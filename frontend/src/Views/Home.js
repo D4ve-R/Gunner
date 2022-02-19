@@ -71,7 +71,6 @@ export default function Home() {
         </Typography>
         <Copyright />
       </Box>
-      {/* End footer */}
     </ThemeProvider>
   );
 }

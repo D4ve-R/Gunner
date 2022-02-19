@@ -10,6 +10,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import Copyright from './Copyright';
 import { lightMode, darkMode } from './modes';
 
 
@@ -113,7 +114,7 @@ function AppContent({children}) {
           <NotifyContext.Provider value={{count: notes,setCount: handleNotifications}}>
             <Box sx={{ display: 'flex' }}>
                   <CssBaseline />
-                  <AppBar position="absolute" open={open}>
+                  <AppBar position="absolute" open={open} sx={{backgroundColor: theme.palette.appBar}}>
                         <Toolbar sx={{ pr: '24px', /* keep right padding when drawer closed */}}>
                           <IconButton
                                 edge="start" color="inherit"
@@ -162,6 +163,7 @@ function AppContent({children}) {
                         }}
                   >
                         {children}
+                        <Copyright/>
                   </Box>
                 </Box>
               </NotifyContext.Provider>

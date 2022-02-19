@@ -12,7 +12,6 @@ const Dashboard = () => {
     <>
     <Container maxWidth="lg" sx={{ mt: 12, mb: 4 }}>
         {user.is ? <GunChat user={user}/> : <h2>Chat</h2>}
-        <Copyright sx={{ pt: 4 }} />
     </Container>
     </>
   )

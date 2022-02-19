@@ -15,8 +15,8 @@ const FileUpload = () => {
       setFile(file);
     }
     return (
-      <Paper sx={{p:2}}>
-          <Grid container spacing={2} >
+      <>
+          <Grid container spacing={4} >
               <Grid item xs={12} md={8} >
                 <DragDrop width={'600px'} handleUpload={handleFile}/>
               </Grid>
@@ -27,7 +27,7 @@ const FileUpload = () => {
                 <Gun3d url={file ? URL.createObjectURL(file) : ''} width={'1000px'} height={'500px'}/>
               </Grid>
           </Grid>
-      </Paper>
+      </>
     );
 }
 
