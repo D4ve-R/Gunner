@@ -1,21 +1,19 @@
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+//import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
-import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { Badge, IconButton, Divider, Typography, List, Toolbar, Box, CssBaseline } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import MenuIcon from '@mui/icons-material/Menu';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { lightMode, darkMode } from './modes';
 
-import { MainListItems } from '../Listitems';
+
+import DrawerList from './DrawerList';
 
 
 const drawerWidth = 240;
@@ -79,21 +77,39 @@ const Notify = () => {
   
     );
 }
-  
-const mdTheme = createTheme();
+
+function modeReducer(mode){
+  switch(mode){
+    case 'light':
+      return lightMode;
+    case 'dark':
+      return darkMode;
+    default:
+      return lightMode;
+  }
+}
   
 function AppContent({children}) {
+    const location = useLocation();
+    const here = location.pathname.replace('/', '');
     const [open, setOpen] = React.useState(true);
     const toggleDrawer = () => {
         setOpen(!open);
     };
+
+    const [mode, setMode] = React.useState('light');
+    const theme = React.useMemo(() => createTheme(modeReducer(mode)), [mode]);
+    function toggleMode(){
+      setMode(prev => prev === 'dark' ? 'light' : 'dark');
+    }
+
     const [notes , setNotes] = React.useState(0);
     function handleNotifications(notes){
         setNotes(notes);
     }
   
     return (
-        <ThemeProvider theme={mdTheme}>
+        <ThemeProvider theme={theme}>
           <NotifyContext.Provider value={{count: notes,setCount: handleNotifications}}>
             <Box sx={{ display: 'flex' }}>
                   <CssBaseline />
@@ -110,10 +126,10 @@ function AppContent({children}) {
                                 <MenuIcon />
                           </IconButton>
                           <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-                                Dashboard
+                                {here.charAt(0).toUpperCase() + here.slice(1)}
                           </Typography>
-                          <IconButton color="inherit" onClick={(e)=>{}}>
-                                <AddCircleOutlineIcon/>
+                          <IconButton color="inherit" onClick={toggleMode}>
+                                {theme.palette.mode === 'dark ' ? <Brightness7Icon/> : <Brightness4Icon/>}
                           </IconButton>
                           <Notify />
                         </Toolbar>
@@ -133,7 +149,7 @@ function AppContent({children}) {
                         </Toolbar>
                         <Divider />
                         <List component="nav">
-                          <MainListItems/>
+                          <DrawerList/>
                         </List>
                   </Drawer>
                   <Box component="main" sx={{ backgroundColor: (theme) =>

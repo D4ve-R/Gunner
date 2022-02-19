@@ -9,7 +9,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Bar from './Components/Layout/Bar';
 import Copyright from './Components/Layout/Copyright';
 import CardGrid from './Components/CardGrid';
-
 const theme = createTheme();
 
 export default function Home() {

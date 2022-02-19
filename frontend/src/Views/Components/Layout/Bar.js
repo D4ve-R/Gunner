@@ -4,7 +4,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import { useNavigate } from 'react-router-dom';
 import {useGun} from '../../../hooks/useGun';
 
@@ -23,10 +24,10 @@ export default function Bar(props) {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <ViewInArIcon fontSize={'large'} />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            { 'Dings'}
+            Dingiverse
           </Typography>
           {user.is ? (<Button color="inherit" onClick={()=>{navigate('/dashboard')}}>Dashboard</Button>)
           :(<Button color="inherit" onClick={()=>{navigate('/signin')}}>Login</Button>)}

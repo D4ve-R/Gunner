@@ -1,64 +1,34 @@
-import React, {useState} from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import React, { useState } from 'react';
+import { Paper, Grid } from '@mui/material';
 
-function handleDefaults(event){
-    event.preventDefault();
-    event.stopPropagation();
+import DragDrop from './DragDrop';
+import FileList from './FileList';
+import Gun3d from '../Gun/Gun3d';
+
+window.addEventListener('drop', (e) => {e.stopPropagation(); e.preventDefault();});
+window.addEventListener('dragover', (e) => {e.stopPropagation(); e.preventDefault();});
+
+const FileUpload = () => {
+    const [file, setFile] = useState(null);
+    function handleFile(file){
+        console.log(file);
+      setFile(file);
+    }
+    return (
+      <Paper sx={{p:2}}>
+          <Grid container spacing={2} >
+              <Grid item xs={12} md={8} >
+                <DragDrop width={'600px'} handleUpload={handleFile}/>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <FileList file={file} />
+              </Grid>
+              <Grid item xs={12} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <Gun3d url={file ? URL.createObjectURL(file) : ''} width={'1000px'} height={'500px'}/>
+              </Grid>
+          </Grid>
+      </Paper>
+    );
 }
 
-const FileUpload = ({onChange, onDrop, width = '400px', height = '200px', bgColor='#969696', labelText = 'Click or Drag&drop file here'}) => {
-    //window.addEventListener('drop', handleDefaults);
-    //window.addEventListener('dragover', handleDefaults);
-    const [label, setLabel] = useState(labelText);
-    
-    function handleDragEnter(e){
-        handleDefaults(e);
-        setLabel('Drop file here');
-    }
-
-    function handleDragLeave(e){
-        handleDefaults(e);
-        setLabel(labelText);
-    }
-
-    function handleChange(e){
-        onChange(e.target.files[0]);
-        setLabel(labelText);
-    }
-
-    function handleDrop(e){
-        handleDefaults(e);
-        onChange(e.dataTransfer.files[0]);
-        setLabel(labelText);
-    }
-
-  return (
-    <>
-    <Box width={width} height={height} >
-        <input
-            type="file"
-            name="fileUpload"
-            id="fileUpload"
-            onChange={handleChange}
-            hidden
-        />
-        <label htmlFor="fileUpload" onDrop={handleDrop} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDragOver={e => handleDefaults} sx={{pointerEvents: 'none'}}>
-            <Box 
-                width={width} height={height} bgcolor={bgColor}
-                style={{pointerEvents: 'none'}}
-                sx={{borderRadius: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
-            >
-                <CloudUploadIcon fontSize="large" sx={{ mb: 1, color: 'primary'}}/>
-                <Typography variant="h6">
-                    {label}
-                </Typography>
-            </Box>
-        </label>
-    </Box>
-    </>
-  )
-}
-
-export default FileUpload
+export default FileUpload;
