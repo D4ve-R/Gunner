@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Gunified react frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+with 3d stuff, video & chat
 
 ## Available Scripts
 
